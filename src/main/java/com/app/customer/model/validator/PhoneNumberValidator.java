@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.customer.model.validator;
 
 import org.springframework.stereotype.Service;
 

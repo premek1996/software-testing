@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.customer.model.validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ class PhoneNumberValidatorTest {
     @ValueSource(strings = {"+447000000000", "+447000800010"})
     @DisplayName("it should validate valid phone number")
     void test1(String phoneNumber) {
-        boolean isValid = phoneNumberValidator.validate(phoneNumber);
+        var isValid = phoneNumberValidator.validate(phoneNumber);
         assertThat(isValid).isTrue();
     }
 
@@ -28,7 +28,7 @@ class PhoneNumberValidatorTest {
     @ValueSource(strings = {"+447000000000000", "447000000000000"})
     @DisplayName("it should validate invalid phone number")
     void test2(String phoneNumber) {
-        boolean isValid = phoneNumberValidator.validate(phoneNumber);
+        var isValid = phoneNumberValidator.validate(phoneNumber);
         assertThat(isValid).isFalse();
     }
 

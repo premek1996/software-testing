@@ -1,11 +1,11 @@
 package com.app.customer.service;
 
 import com.app.customer.model.Customer;
+import com.app.customer.model.validator.PhoneNumberValidator;
 import com.app.customer.repository.CustomerRepository;
-import com.app.customer.service.exception.CustomerRegistrationServiceException;
 import com.app.customer.web.dto.CustomerRegistrationDTO;
-import com.app.utils.ExceptionMessage;
-import com.app.utils.PhoneNumberValidator;
+import com.app.exception.BadRequestException;
+import com.app.exception.ExceptionMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,7 +96,7 @@ class CustomerRegistrationServiceTest {
                         .build()));
 
         assertThatThrownBy(() -> customerRegistrationService.registerNewCustomer(dto))
-                .isInstanceOf(CustomerRegistrationServiceException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage(ExceptionMessage.OTHER_CUSTOMER_HAS_THE_SAME_PHONE_NUMBER);
 
         verify(customerRepository, times(1))
@@ -117,7 +117,7 @@ class CustomerRegistrationServiceTest {
                 .thenReturn(false);
 
         assertThatThrownBy(() -> customerRegistrationService.registerNewCustomer(dto))
-                .isInstanceOf(CustomerRegistrationServiceException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage(ExceptionMessage.PHONE_NUMBER_IS_INVALID);
 
         verifyNoInteractions(customerRepository);

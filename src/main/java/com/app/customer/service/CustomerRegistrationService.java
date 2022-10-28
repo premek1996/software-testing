@@ -1,11 +1,11 @@
 package com.app.customer.service;
 
 import com.app.customer.model.Customer;
+import com.app.customer.model.validator.PhoneNumberValidator;
 import com.app.customer.repository.CustomerRepository;
-import com.app.customer.service.exception.CustomerRegistrationServiceException;
 import com.app.customer.web.dto.CustomerRegistrationDTO;
-import com.app.utils.ExceptionMessage;
-import com.app.utils.PhoneNumberValidator;
+import com.app.exception.BadRequestException;
+import com.app.exception.ExceptionMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class CustomerRegistrationService {
 
     public Customer registerNewCustomer(CustomerRegistrationDTO dto) {
         if (!phoneNumberValidator.validate(dto.getPhoneNumber())) {
-            throw new CustomerRegistrationServiceException(ExceptionMessage.PHONE_NUMBER_IS_INVALID);
+            throw new BadRequestException(ExceptionMessage.PHONE_NUMBER_IS_INVALID);
         }
         var customerOpt = customerRepository
                 .findByPhoneNumber(dto.getPhoneNumber());
@@ -29,7 +29,7 @@ public class CustomerRegistrationService {
         if (customer.hasName(dto.getName())) {
             return customer;
         }
-        throw new CustomerRegistrationServiceException
+        throw new BadRequestException
                 (ExceptionMessage.OTHER_CUSTOMER_HAS_THE_SAME_PHONE_NUMBER);
     }
 

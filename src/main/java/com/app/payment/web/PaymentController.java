@@ -6,6 +6,7 @@ import com.app.payment.web.dto.MakePaymentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public void makePayment(@RequestBody MakePaymentDTO dto) {
+    public void makePayment(@Valid @RequestBody MakePaymentDTO dto) {
         paymentService.chargeCard(dto);
     }
 

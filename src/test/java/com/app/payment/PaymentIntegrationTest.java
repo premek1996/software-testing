@@ -6,7 +6,6 @@ import com.app.payment.model.Payment;
 import com.app.payment.web.dto.MakePaymentDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -46,7 +47,7 @@ class PaymentIntegrationTest {
                 .phoneNumber("+447000000000")
                 .build();
 
-        var customerRegistrationResultActions = mockMvc.perform(put("/api/v1/customer-registration")
+        var customerRegistrationResultActions = mockMvc.perform(post("/api/v1/customer-registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customerRegistrationDTO)));
 
@@ -58,25 +59,25 @@ class PaymentIntegrationTest {
                 .description("Donation")
                 .build();
 
-        ResultActions makePaymentResultAction = mockMvc.perform(post("/api/v1/payment")
+        var makePaymentResultAction = mockMvc.perform(post("/api/v1/payment")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(makePaymentDTO)));
 
-        ResultActions paymentsByCustomerIdResultAction = mockMvc.perform(get("/api/v1/payment/%s".formatted(customerId)));
+        var paymentsByCustomerIdResultAction = mockMvc.perform(get("/api/v1/payment/%s".formatted(customerId)));
 
         customerRegistrationResultActions.andExpect(status().isOk());
         makePaymentResultAction.andExpect(status().isOk());
         paymentsByCustomerIdResultAction.andExpect(status().isOk());
 
-        List<Payment> payments = getPaymentsFromResultActions(paymentsByCustomerIdResultAction);
-        Assertions.assertThat(payments).hasSize(1);
-        Assertions.assertThat(payments.get(0).isMessageSent())
+        var payments = getPaymentsFromResultActions(paymentsByCustomerIdResultAction);
+        assertThat(payments).hasSize(1);
+        assertThat(payments.get(0).isMessageSent())
                 .isTrue();
     }
 
     @SneakyThrows
     private List<Payment> getPaymentsFromResultActions(ResultActions resultActions) {
-        String responseAsString = resultActions.andReturn()
+        var responseAsString = resultActions.andReturn()
                 .getResponse()
                 .getContentAsString();
         return Arrays.asList(objectMapper.readValue(responseAsString, Payment[].class));

@@ -2,16 +2,16 @@ package com.app.payment.service;
 
 import com.app.customer.model.Customer;
 import com.app.customer.repository.CustomerRepository;
+import com.app.exception.BadRequestException;
+import com.app.exception.ExceptionMessage;
 import com.app.payment.model.Currency;
 import com.app.payment.model.Payment;
 import com.app.payment.repository.PaymentRepository;
 import com.app.payment.service.cardpaymentcharger.CardPaymentCharge;
 import com.app.payment.service.cardpaymentcharger.CardPaymentCharger;
-import com.app.payment.service.exception.PaymentServiceException;
 import com.app.payment.service.messagesender.MessageSender;
 import com.app.payment.service.messagesender.MessageStatus;
 import com.app.payment.web.dto.MakePaymentDTO;
-import com.app.utils.ExceptionMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +61,7 @@ class PaymentServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> paymentService.chargeCard(dto))
-                .isInstanceOf(PaymentServiceException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage(ExceptionMessage.CUSTOMER_DOES_NOT_EXIST_WITH_GIVEN_ID);
 
         verifyNoInteractions(cardPaymentCharger);
@@ -83,7 +83,7 @@ class PaymentServiceTest {
                 .thenReturn(Optional.of(mock(Customer.class)));
 
         assertThatThrownBy(() -> paymentService.chargeCard(dto))
-                .isInstanceOf(PaymentServiceException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage(ExceptionMessage.CURRENCY_IS_NOT_ACCEPTED);
 
         verifyNoInteractions(cardPaymentCharger);
@@ -115,7 +115,7 @@ class PaymentServiceTest {
                 .thenReturn(cardPaymentCharge);
 
         assertThatThrownBy(() -> paymentService.chargeCard(dto))
-                .isInstanceOf(PaymentServiceException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessage(ExceptionMessage.CARD_IS_NOT_DEBITED);
 
         verifyNoInteractions(paymentRepository);

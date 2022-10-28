@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Getter
@@ -14,8 +15,10 @@ public class CustomerRegistrationDTO {
 
     private String customerId;
 
+    @NotBlank
     private final String name;
 
+    @NotBlank
     private final String phoneNumber;
 
     public Customer toCustomer() {

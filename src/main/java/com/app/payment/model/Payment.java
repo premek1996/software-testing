@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,11 +21,23 @@ public class Payment {
     @Id
     @GeneratedValue
     private Long paymentId;
+
+    @Column(nullable = false)
     private String customerId;
+
+    @Column(nullable = false)
     private BigDecimal amount;
+
+    @Column(nullable = false)
     private Currency currency;
+
+    @Column(nullable = false)
     private String cardSource;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private boolean messageSent;
 
     public Payment withMessageSent(boolean messageSent) {

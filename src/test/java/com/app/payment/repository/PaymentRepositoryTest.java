@@ -4,7 +4,6 @@ import com.app.customer.model.Customer;
 import com.app.customer.repository.CustomerRepository;
 import com.app.payment.model.Currency;
 import com.app.payment.model.Payment;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +66,7 @@ class PaymentRepositoryTest {
 
         paymentRepository.save(payment);
 
-        Assertions.assertThat(paymentRepository.getAllByCustomerId(customerId))
+        assertThat(paymentRepository.getAllByCustomerId(customerId))
                 .hasSize(1);
     }
 
